@@ -40,14 +40,13 @@ def load_index():
     return index
 
 
-
 model = load_model()
 data = load_data()
 index = load_index()
 
 
 def main():
-    st.title("Arxiv Search Engine")
+    st.title("Paper Recommendation Engine")
     query = st.text_input("Search query")
     k = st.slider("Number of results", 1, 10, 3)
 
