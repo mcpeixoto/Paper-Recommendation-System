@@ -8,7 +8,7 @@ from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 import gc
 
-
+st. set_page_config(layout="wide")
 
 #@st.cache(persist=True, max_entries=1)
 @st.experimental_singleton
@@ -16,7 +16,7 @@ def load_data():
     print("Loading data!")
     data = pd.read_csv('data/arxiv_processed.csv')
     # Prune abstract to 50 characters
-    data['abstract'] = data['abstract'].apply(lambda x: x[:50] + '...' if len(x) > 50 else x)
+    #data['abstract'] = data['abstract'].apply(lambda x: x[:50] + '...' if len(x) > 50 else x)
     #data['text'] = data['title'] + " " + data['abstract']
     return data
 
@@ -24,7 +24,6 @@ def load_data():
 
 #@st.cache(persist=True, max_entries=1)
 @st.experimental_singleton
-
 def load_model():
     print("Loading model!")
     model = SentenceTransformer('all-mpnet-base-v2', device='cuda')
@@ -58,10 +57,29 @@ def main():
 
         df = pd.DataFrame()
         for idx, score in zip(I[0], D[0]):
-            df = pd.concat([df, data.iloc[idx:idx+1]])
+            to_add = data.iloc[idx]
 
-        st.table(df[['title', 'abstract', 'url']])
-        #st.balloons()
+            # Add score
+            to_add['score'] = score
+
+            df = pd.concat([df, to_add], axis=1)
+
+        df = df.T
+
+        # Checkbox
+        dataframe_rep = st.checkbox("Use dataframe representation", value=False)
+        baloons = st.checkbox("Use baloons", value=True)
+
+        if dataframe_rep:
+            st.dataframe(df[['score', 'title', 'abstract', 'url']], use_container_width=True)
+        else:
+            # Make a table 
+            st.table(df[['score', 'title', 'abstract', 'url']])
+
+        # Baloons
+        if baloons:
+            st.balloons()
+
         del df
         gc.collect()
 
