@@ -52,7 +52,7 @@ def main():
         for idx, score in zip(I[0], D[0]):
             # Load the specific line from pandas
             to_add = pd.read_csv('data/arxiv_processed.csv', nrows=1, skiprows=idx)#.iloc[0]
-            to_add.columns = ['title', 'abstract', 'url']
+            to_add.columns = ['abstract', 'title', 'url']
 
 
             # Add score
