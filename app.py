@@ -8,20 +8,19 @@ from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 
 
-use_gpu = True
+use_gpu = False
 device = 'cuda' if use_gpu else 'cpu'
 
-# Streamlit - Wait for the model to load
-st.title("Arxiv Search Engine")
-st.write("Loading model...")
+
+@st.cache
+def load_data():
+    data = pd.read_csv('data/arxiv_processed.csv')
+    data['text'] = data['title'] + " " + data['abstract']
+    return data
 
 
-# Load the model
-model = SentenceTransformer('all-mpnet-base-v2', device=device)
 
-# Load the data
-data = pd.read_csv('data/arxiv_processed.csv')
-data['text'] = data['title'] + " " + data['abstract']
+
 # Load the index
 class FaissIdx:
     def __init__(self, model, dim=768, batch_size=64):
@@ -52,7 +51,7 @@ class FaissIdx:
             self.index.add(self.model.encode(document_text[i:i+self.batch_size]))
 
             if i % save_every == 0:
-                self.save_index('index_copy.faiss')
+                self.save_index('index.faiss')
 
         #self.doc_map[self.ctr] = document_text # store the original document text
 
@@ -64,7 +63,7 @@ class FaissIdx:
         print("Loading index!")
         # Convert index to cpu
         if use_gpu:
-            index.index = faiss.index_gpu_to_cpu(index.index)
+            self.index = faiss.index_gpu_to_cpu(self.index)
 
         self.index = faiss.read_index(index_path)
         self.ctr = self.index.ntotal
@@ -74,15 +73,12 @@ class FaissIdx:
             res = faiss.StandardGpuResources()
             self.index = faiss.index_cpu_to_gpu(res, 0, self.index)
 
-        print("Index loaded! Position: ", self.ctr)
-        print("Documents in index: ", self.index.ntotal)
-        print("Documents total: ", len(data['text'].values))
 
 
     def save_index(self, index_path):
         if use_gpu:
             # Convert index to cpu
-            index.index = faiss.index_gpu_to_cpu(index.index)
+            self.index = faiss.index_gpu_to_cpu(self.index)
 
         faiss.write_index(self.index, index_path)
 
@@ -91,25 +87,38 @@ class FaissIdx:
             res = faiss.StandardGpuResources()
             self.index = faiss.index_cpu_to_gpu(res, 0, self.index)
 
-index = FaissIdx(model)
-index.load_index('index_copy.faiss')
 
-# Remove the loading message
-st.empty()
-# Baloon message
-st.balloons()
+@st.cache
+def load_index():
+    model = SentenceTransformer('all-mpnet-base-v2', device=device)
+    index = FaissIdx(model)
+    index.load_index('index.faiss')
+    return index
 
-# Streamlit app
-st.title("Arxiv Search Engine")
-query = st.text_input("Search query")
-k = st.slider("Number of results", 1, 10, 3)
 
-if query:
-    D, I = index.index.search(index.model.encode(query).reshape(1, -1), k)
-    for idx, score in zip(I[0], D[0]):
-        st.write(f"Score: {score}")
-        st.write(data['title'].values[idx])
-        st.write(data['abstract'].values[idx])
-        st.write(data['url'].values[idx])
-        st.write("")
+if 'data' not in st.session_state:
+    st.session_state.data = load_data()
+    st.session_state.index = load_index()
 
+def main():
+    st.title("Arxiv Search Engine")
+    query = st.text_input("Search query")
+    k = st.slider("Number of results", 1, 10, 3)
+
+    index = st.session_state.index
+    data = st.session_state.data
+
+
+    if query:
+        D, I = index.index.search(index.model.encode(query).reshape(1, -1), k)
+
+        df = pd.DataFrame()
+        for idx, score in zip(I[0], D[0]):
+            df = df.append(data.iloc[idx])
+
+        st.write(df[['title', 'abstract', 'url']])
+        st.balloons()
+        
+
+if __name__ == "__main__":
+    main()
