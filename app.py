@@ -7,6 +7,7 @@ import pandas as pd
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 import gc
+import time
 
 st. set_page_config(layout="wide")
 
@@ -52,7 +53,9 @@ def main():
 
 
     if query:
+        start_time = time.time()
         D, I = index.search(model.encode(query).reshape(1, -1), k)
+        end_time = time.time()
 
         df = pd.DataFrame()
         for idx, score in zip(I[0], D[0]):
@@ -68,6 +71,7 @@ def main():
         # Checkbox
         dataframe_rep = st.checkbox("Use dataframe representation", value=False)
         baloons = st.checkbox("Use baloons", value=True)
+        show_stats_message = st.checkbox("Show stats message", value=True)
 
         if dataframe_rep:
             st.dataframe(df[['score', 'title', 'abstract', 'url']], use_container_width=True)
@@ -81,6 +85,11 @@ def main():
 
         del df
         gc.collect()
+
+
+        if show_stats_message:
+            # Show sucessful query message and tell how many documents we passed
+            st.success(f"Found {len(I[0])} results in {end_time - start_time:.2f} seconds on database of {len(data)} papers.")
 
         
 
