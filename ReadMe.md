@@ -14,3 +14,4 @@ Still under development.
 - [ ] Show the categories
 - [ ] Show the authors
 - [ ] Provide a preview of the paper
+- [ ] Question Answering to papers
