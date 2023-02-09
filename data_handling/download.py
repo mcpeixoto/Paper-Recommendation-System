@@ -71,5 +71,5 @@ def process_data(processed_data_path = join(data_dir, "arxiv_processed.csv")):
 
 
 if __name__ == "__main__":
-    #download_data()
+    download_data()
     process_data()

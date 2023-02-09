@@ -19,21 +19,26 @@ help:
 # Variables
 CURRENT_DIR = $(shell pwd)
 SHELL = /bin/bash
+CONDA_ACTIVATE=source $$(conda info --base)/etc/profile.d/conda.sh ; conda activate ; conda activate
 
 install:
 	@echo "Creating conda enviroment..."
 	# Create conda enviroment
 	conda env create -f environment.yml -p .env
 	# Activate conda enviroment
-	conda activate $(CURRENT_DIR)/.env
+	$(CONDA_ACTIVATE) $(CURRENT_DIR)/.env
 
 download:
 	@echo "Downloading data..."
-	# Download data
+	@# Activate conda enviroment
+	$(CONDA_ACTIVATE) $(CURRENT_DIR)/.env
+	@# Download data
 	python data_handling/download.py
 
 create_index:
 	@echo "Creating FAISS index..."
+	# Activate conda enviroment
+	conda activate $(CURRENT_DIR)/.env
 	# Create FAISS index
 	python utils/create_index.py
 
