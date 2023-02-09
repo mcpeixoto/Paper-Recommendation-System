@@ -71,5 +71,8 @@ def process_data(processed_data_path = join(data_dir, "arxiv_processed.csv")):
 
 
 if __name__ == "__main__":
+    print("[+] Downloading data using kaggle API..")
     download_data()
+    print("[+] Processing data..")
     process_data()
+    print("[+] Done!")
