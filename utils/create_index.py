@@ -109,6 +109,9 @@ class FaissIdx:
 if __name__ == "__main__":
     # Load data
     print("[+] Loading data")
+    if not os.path.exists(join(data_dir, 'arxiv_processed.csv')):
+        print(f"[!] File {join(data_dir, 'arxiv_processed.csv')} not found. Please download the data first")
+        exit()
     data = pd.read_csv(join(data_dir, 'arxiv_processed.csv'), dtype=str)
     print(f"[+] Loaded {len(data)} documents")
 
