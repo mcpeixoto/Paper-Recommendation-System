@@ -41,7 +41,8 @@ class FaissIdx:
         print(f"[+] Adding {len(data)} documents to index")
 
         # document_text is all the data that wasen't already added (present on self.ids)
-        document_text = data[~data['id'].isin(self.ids)]['text'].values
+        data = data[~data['id'].isin(self.ids)]
+        document_text = data['text'].values
 
         if len(data) - len(document_text) > 0:
             print(f"[+] {len(data) - len(document_text)} were already added, adding the remaining {len(document_text)} ({round(len(document_text)/len(data)*100, 2)}%)")
@@ -51,7 +52,7 @@ class FaissIdx:
             self.index.add(self.model.encode(document_text[i:i+batch_size]))
 
             # Add ids
-            self.ids.extend(data[~data['id'].isin(self.ids)]['id'].values[i:i+batch_size])
+            self.ids.extend(data['id'].values[i:i+batch_size])
 
             # Save index every save_every batches
             if i % (batch_size * save_every) == 0:
