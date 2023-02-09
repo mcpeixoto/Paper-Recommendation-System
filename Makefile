@@ -12,7 +12,8 @@ help:
 	@echo "    help                 💬 This help message"
 	@echo "    install              📦 Create conda enviroment e install dependencies."
 	@echo "    download             📥 Download data from the web."
-	@echo "    create_index      	🏋️‍♀️ Creates the FAISS index by embedding all the papers. WARNING: This will overwrite any existing index."
+	@echo "    create_index      	🏋️‍♀️ Creates the FAISS index by embedding all the papers."
+	@echo "    update 		   		🔄 Update the app with the latest papers."
 	@echo "    run              	🏃 Run the aplication."
 	@echo ""
 
@@ -23,9 +24,9 @@ CONDA_ACTIVATE=source $$(conda info --base)/etc/profile.d/conda.sh ; conda activ
 
 install:
 	@echo "Creating conda enviroment..."
-	# Create conda enviroment
+	@# Create conda enviroment
 	conda env create -f environment.yml -p .env
-	# Activate conda enviroment
+	@# Activate conda enviroment
 	$(CONDA_ACTIVATE) $(CURRENT_DIR)/.env
 
 download:
@@ -37,8 +38,22 @@ download:
 
 create_index:
 	@echo "Creating FAISS index..."
-	# Activate conda enviroment
-	conda activate $(CURRENT_DIR)/.env
-	# Create FAISS index
+	@# Activate conda enviroment
+	$(CONDA_ACTIVATE) $(CURRENT_DIR)/.env
+	@# Create FAISS index
 	python utils/create_index.py
 
+
+update:
+	@echo "Updating app..."
+	@# Activate conda enviroment
+	$(CONDA_ACTIVATE) $(CURRENT_DIR)/.env
+	@# Delete old files (arxiv.json and arxiv_processed.csv) if they exist
+	@echo "Deleting old files..."
+	rm -f data/arxiv.json
+	rm -f data/arxiv_processed.csv
+	@echo "Downloading data..."
+	python data_handling/download.py
+	@echo "Creating FAISS index..."
+	python utils/create_index.py
+	@echo "Done!"
