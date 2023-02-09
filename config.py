@@ -6,7 +6,7 @@ import glob
 
 data_dir = 'data'
 thumbnail_dir  = join(data_dir, 'thumbnails')
-
+testing = True
 
 # If the directorys doesn't exist, create it
 for dir in [data_dir, thumbnail_dir]:

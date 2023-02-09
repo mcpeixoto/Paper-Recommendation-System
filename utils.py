@@ -48,14 +48,16 @@ def get_thumbnail(arxiv_url):
         
         # Read pdf
         images = convert_from_path(pdf_path)
-    except:
+    except Exception as e:
         print(f"[-] Couldn't download pdf for {arxiv_id}")
+        print("URL: " + thumbnail_url)
+        print(e)
         return None
 
     # Generate thumbnail by concatenating the pdf pages horizontally and converting to png
 
-    if len(images) > 6:
-        images = images[:6]
+    if len(images) > 8:
+        images = images[:8]
 
     # Concatenate the pages horizontally
     width, height = images[0].size
