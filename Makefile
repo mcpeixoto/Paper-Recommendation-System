@@ -30,5 +30,5 @@ install:
 download:
 	@echo "Downloading data..."
 	# Download data
-	python src/download_data.py	
+	python data_handling/download.py	
 
