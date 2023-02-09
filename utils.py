@@ -26,30 +26,33 @@ def get_url(arxiv_id):
     return "https://arxiv.org/abs/" + first_part + "." + second_part
 
 
-def generate_thumbnail(arxiv_url):
+def get_thumbnail(arxiv_url):
     """Generate a thumbnail for the given arxiv url"""
 
     # Get the Paths
+    arxiv_id = arxiv_url.split("/")[-1]
     pdf_path = join(thumbnail_dir, arxiv_id + ".pdf")
     thumbnail_path = join(thumbnail_dir, arxiv_id + ".png")
 
     # If thumbnail already exists, return
     if exists(thumbnail_path):
-        return
-
-    # Get the arxiv id from the url
-    arxiv_id = arxiv_url.split("/")[-1]
+        return thumbnail_path
 
     # Get the thumbnail url
     # NOTE: There is also an e-print url, which contains the latex source code. This could be used to do some cool stuff
     thumbnail_url = "https://arxiv.org/pdf/" + arxiv_id
 
     # Download pdf, concatenate the pages horizontally and convert to png
-    urllib.request.urlretrieve(thumbnail_url, join(thumbnail_dir, arxiv_id + ".pdf"))
+    try:
+        urllib.request.urlretrieve(thumbnail_url, join(thumbnail_dir, arxiv_id + ".pdf"))
+        
+        # Read pdf
+        images = convert_from_path(pdf_path)
+    except:
+        print(f"[-] Couldn't download pdf for {arxiv_id}")
+        return None
 
     # Generate thumbnail by concatenating the pdf pages horizontally and converting to png
-    # Read pdf
-    images = convert_from_path(pdf_path)
 
     if len(images) > 6:
         images = images[:6]
@@ -68,4 +71,4 @@ def generate_thumbnail(arxiv_url):
 
     print(f"[+] Generated thumbnail for {arxiv_id}")
 
-    return
+    return thumbnail_path
