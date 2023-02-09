@@ -7,6 +7,7 @@ from config import data_dir
 import pandas as pd
 import gc
 from tqdm import tqdm
+import pickle
 
 import pandas as pd
 from gensim.corpora import Dictionary
@@ -57,16 +58,8 @@ if __name__ == "__main__":
     # Save the model
     lda_model.save(join(data_dir, 'lda_model'))
 
-
-
-    # Assign topics to documents
-    #topic_lists = []
-    #for bow in bow_corpus:
-    #    topics = lda_model.get_document_topics(bow)
-    #    topic_lists.append([dictionary[topic[0]] for topic in sorted(topics, key=lambda x: x[1], reverse=True)])
-
-    #data['topics'] = topic_lists
-
-
+    # Save dictionary
+    with open(join(data_dir, 'tags_dictionary.pkl'), 'wb') as f:
+        pickle.dump(dictionary, f)
 
 
