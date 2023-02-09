@@ -57,3 +57,10 @@ update:
 	@echo "Creating FAISS index..."
 	python utils/create_index.py
 	@echo "Done!"
+
+run:
+	@echo "Running app..."
+	@# Activate conda enviroment
+	$(CONDA_ACTIVATE) $(CURRENT_DIR)/.env
+	@# Run app
+	streamlit run website/app.py 

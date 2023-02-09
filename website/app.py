@@ -1,4 +1,7 @@
-# Streamlit app to display the results of the model
+# Streamlit app
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
 import streamlit as st
 import faiss
@@ -8,22 +11,18 @@ from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 import gc
 import time
+from config import data_dir
 
 st. set_page_config(layout="wide")
 
-#@st.cache(persist=True, max_entries=1)
+
 @st.experimental_singleton
 def load_data():
     print("Loading data!")
-    data = pd.read_csv('data/arxiv_processed.csv')
-    # Prune abstract to 50 characters
-    #data['abstract'] = data['abstract'].apply(lambda x: x[:50] + '...' if len(x) > 50 else x)
-    #data['text'] = data['title'] + " " + data['abstract']
+    data = pd.read_csv(f'{data_dir}/arxiv_processed.csv', dtype=str)
     return data
 
 
-
-#@st.cache(persist=True, max_entries=1)
 @st.experimental_singleton
 def load_model():
     print("Loading model!")
@@ -31,7 +30,7 @@ def load_model():
     return model
 
 
-#@st.cache(persist=True, max_entries=1)
+
 @st.experimental_singleton
 def load_index():
     print("Loading index!")
