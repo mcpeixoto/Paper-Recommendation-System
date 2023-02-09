@@ -5,8 +5,10 @@ import glob
 
 
 data_dir = 'data'
+thumbnail_dir  = join(data_dir, 'thumbnails')
 
-# If the data directory doesn't exist, create it
-if not exists(data_dir):
-    os.makedirs(data_dir)
 
+# If the directorys doesn't exist, create it
+for dir in [data_dir, thumbnail_dir]:
+    if not exists(dir):
+        os.mkdir(dir)
