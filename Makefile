@@ -41,7 +41,7 @@ create_index:
 	@# Activate conda enviroment
 	$(CONDA_ACTIVATE) $(CURRENT_DIR)/.env
 	@# Create FAISS index
-	python utils/create_index.py
+	python data_handling/create_index.py
 
 
 update:
@@ -55,7 +55,7 @@ update:
 	@echo "Downloading data..."
 	python data_handling/download.py
 	@echo "Creating FAISS index..."
-	python utils/create_index.py
+	python data_handling/create_index.py
 	@echo "Done!"
 
 run:
