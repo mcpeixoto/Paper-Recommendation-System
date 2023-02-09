@@ -22,6 +22,12 @@ if not exists(join(expanduser("~"), ".kaggle", "kaggle.json")):
 import kaggle
 
 def download_data(final_file_name="arxiv.json"):
+
+    # Check if the data has already been downloaded
+    if exists(join(data_dir, final_file_name)):
+        print("Data has already been downloaded")
+        return
+
     # Download the data
     kaggle.api.authenticate()
 
