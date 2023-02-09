@@ -167,6 +167,7 @@ dependencies:
       - huggingface-hub==0.12.0
       - jinja2==3.1.2
       - joblib==1.2.0
+      - kaggle==1.5.12
       - markdown-it-py==2.1.0
       - markupsafe==2.1.2
       - mdurl==0.1.2
@@ -176,6 +177,7 @@ dependencies:
       - pydeck==0.8.0
       - pympler==1.0.1
       - pyqt5-sip==12.11.0
+      - python-slugify==8.0.0
       - pytz-deprecation-shim==0.1.0.post0
       - regex==2022.10.31
       - rich==13.3.1
@@ -186,6 +188,7 @@ dependencies:
       - sentencepiece==0.1.97
       - smmap==5.0.0
       - streamlit==1.17.0
+      - text-unidecode==1.3
       - threadpoolctl==3.1.0
       - tokenizers==0.13.2
       - toolz==0.12.0
