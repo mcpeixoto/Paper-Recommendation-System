@@ -1,3 +1,6 @@
+import sys
+sys.path.append("..")
+
 import os
 from os.path import join, basename, exists
 import glob
