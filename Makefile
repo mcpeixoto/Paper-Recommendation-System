@@ -12,7 +12,7 @@ help:
 	@echo "    help                 💬 This help message"
 	@echo "    install              📦 Create conda enviroment e install dependencies."
 	@echo "    download             📥 Download data from the web."
-	@echo "    create_index      	🏋️‍♀️ Create the FAISS index by embedding all the papers."
+	@echo "    create_index      	🏋️‍♀️ Creates the FAISS index by embedding all the papers. WARNING: This will overwrite any existing index."
 	@echo "    run              	🏃 Run the aplication."
 	@echo ""
 
@@ -30,5 +30,10 @@ install:
 download:
 	@echo "Downloading data..."
 	# Download data
-	python data_handling/download.py	
+	python data_handling/download.py
+
+create_index:
+	@echo "Creating FAISS index..."
+	# Create FAISS index
+	python utils/create_index.py
 
