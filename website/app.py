@@ -13,7 +13,6 @@ import gc
 import time
 from os.path import join
 import pickle
-from gensim.models import LdaModel, LdaMulticore
 import json
 
 from config import data_dir, thumbnail_dir, testing
