@@ -10,7 +10,7 @@ from tqdm import tqdm
 import faiss
 import gc
 import pickle
-
+import numpy as np
 
 # Faiss
 class FaissIdx:
@@ -73,7 +73,9 @@ class FaissIdx:
         with open(join(index_path, 'ids.pkl'), 'rb') as f:
             self.ids = pickle.load(f)
 
-        assert len(self.ids) == self.index.ntotal, f"[!] Number of ids ({len(self.ids)}) doesn't match number of documents in index ({self.index.ntotal})"
+        if len(self.ids) != self.index.ntotal:
+            print(f"[!] Number of ids ({len(self.ids)}) doesn't match number of documents in index ({self.index.ntotal})")
+            self.resolve_incosistency()
 
         print(f"[+] Index loaded successfully - Loaded {len(self.ids)} documents")
 
@@ -101,6 +103,24 @@ class FaissIdx:
     
     def switch_to_cpu(self):
         self.index = faiss.index_gpu_to_cpu(index.index)
+
+    def resolve_incosistency(self):
+        print("[+] Resolving inconsistency..")
+        n_index = self.index.ntotal
+        n_ids = len(self.ids)
+
+        if n_index > n_ids:
+            print(f"[+] Removing {n_index - n_ids} documents from index")
+            removed = self.index.remove_ids(np.arange(n_ids, n_index))
+            assert removed == n_index - n_ids
+        elif n_index < n_ids:
+            print(f"[+] Removing {n_ids - n_index} ids from ids list")
+            self.ids = self.ids[:n_index]
+        else:
+            print("[+] No inconsistency found")
+
+        #  Save index
+        self.save_index(data_dir)
 
 
 # This will create the index given the arxiv_processed.csv file
