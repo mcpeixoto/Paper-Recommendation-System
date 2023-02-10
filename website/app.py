@@ -133,9 +133,6 @@ def draw_sidebar():
         # multiselect
         selected_categories = st.sidebar.multiselect("Select categories", categories)
 
-        # Add a button to clear the filters
-        if st.sidebar.button("Clear filters"):
-            selected_categories = []
 
         # Add a button to apply the filters
         if st.sidebar.button("Apply filters"):
@@ -146,6 +143,7 @@ def draw_sidebar():
 
 
         # Show user tags
+        st.sidebar.markdown("---")
         st.sidebar.header("User Tags")
         
         # Show the user tags
@@ -277,18 +275,23 @@ def main():
                 html += f"""<br> <font size="4"> LDA Auto Tags: """
                 for tag, prob in lda_tag_list:
                     if prob > 0.5:
-                        html += f":blue[[{tag} ({round(prob*100)}%)]] "
+                        html += f":blue[[{tag}] ({round(prob*100)}%)], "
+                # Remove last ,
+                html = html[:-2]
 
             ###################
             #### User Tags ####
             ###################
 
             user_tag_list = get_user_tags_from_query(row['title'] + " " + row['abstract'], user_tags, model)
-            if any([prob > 0.5 for tag, prob in lda_tag_list]):
-                html += f"""<font size="4"> User Tags: """
+            if any([prob > 0.5 for tag, prob in user_tag_list]):
+                html += f"""<br> <font size="4"> User Tags: """
                 for tag, prob in user_tag_list:
                     if prob > 0.5:
-                        html += f":red[[{tag} ({round(prob*100)}%)]] "
+                        html += f":red[[{tag}] ({round(prob*100)}%)], "
+                # Remove last ,
+                html = html[:-2]
+
 
                 
             # Show html
