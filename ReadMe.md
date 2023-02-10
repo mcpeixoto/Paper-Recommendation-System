@@ -30,12 +30,9 @@
 
 ## Built With
 
-This section should list any major frameworks that you built your project using. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
-
 * [Streamlit](https://streamlit.io/)
 * [Facebook's Faiss](https://github.com/facebookresearch/faiss)
 * [Sentence Transformers](sentence-transformers/all-mpnet-base-v2)
-* [Gensim](https://radimrehurek.com/gensim/index.html)
 * [ArXiv dataset](https://www.kaggle.com/Cornell-University/arxiv)
 
 ## Getting Started
