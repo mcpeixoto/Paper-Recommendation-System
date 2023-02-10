@@ -39,7 +39,7 @@
 ## About The Project
 
 <div align="center">
-  <img src="resources/website.gif" width="700" class="center"/>
+  <img src="resources/website.gif" width="900" class="center"/>
 </div>
 
 ## Built With
