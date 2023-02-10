@@ -35,26 +35,31 @@ class FaissIdx:
 
     # TODO: Check if current index was already added
     def add_doc(self, data):
-        batch_size = 128
+        batch_size = 64
         save_every = 10
 
         print(f"[+] Adding {len(data)} documents to index")
 
         # document_text is all the data that wasen't already added (present on self.ids)
-        document_text = data[~data['id'].isin(self.ids)]['text'].values
-        print(f"[INFO] {len(data) - len(document_text)} were already added, adding the remaining {len(document_text)} ({round(len(document_text)/len(data)*100, 2)}%)")
-        data = data[~data['id'].isin(self.ids)]
+        document_data = data[~data['id'].isin(self.ids)]['text'].values
+        print(f"[INFO] {len(data) - len(document_data)} were already added, adding the remaining {len(document_data)} ({round(len(document_data)/len(data)*100, 2)}%)")
+        ids_data = data[~data['id'].isin(self.ids)]['id']
+        del data
+        gc.collect()
 
-        for i in tqdm(range(0, len(document_text), batch_size), desc="Adding documents to index", unit="batch"):
+        for i in tqdm(range(0, len(document_data), batch_size), desc="Adding documents to index", unit="batch"):
             # Add embeddings
-            self.index.add(self.model.encode(document_text[i:i+batch_size]))
+            self.index.add(self.model.encode(document_data[i:i+batch_size]))
 
             # Add ids
-            self.ids.extend(data['id'].values[i:i+batch_size])
+            self.ids.extend(ids_data.values[i:i+batch_size])
 
             # Save index every save_every batches
-            if i % (batch_size * save_every) == 0:
+            if i % (batch_size * save_every) == 0 and i != 0:
                 self.save_index(data_dir)
+
+        # Save index
+        self.save_index(data_dir)
 
     def load_index(self, index_path):
         if not os.path.exists(join(index_path, 'index.faiss')):
