@@ -1,0 +1,19 @@
+{
+    "Machine Learning": ["machine", "learning", "neural", "network"],
+    "Quantum Computing": ["quantum", "computing", "entanglement"],
+    "High Energy Physics": ["physics", "particle", "accelerator"],
+    "Computer Vision": ["computer", "vision", "image", "recognition"],
+    "Natural Language Processing": ["natural", "language", "processing", "NLP"],
+    "Robotics": ["robotics", "robot", "automation", "mechanics"],
+    "Cryptography": ["cryptography", "crypto", "encryption", "security"],
+    "Bioinformatics": ["bioinformatics", "biology", "genetics", "sequence"],
+    "Data Science": ["data", "science", "analytics", "big data"],
+    "Renewable Energy": ["renewable", "energy", "solar", "wind"],
+    "Climate Science": ["climate", "science", "atmosphere", "environment"],
+    "Genetic Engineering": ["genetic", "engineering", "genomics", "DNA"],
+    "Artificial Intelligence": ["artificial", "intelligence", "AI", "machine intelligence"],
+    "Operations Research": ["operations", "research", "optimization", "analytics"],
+    "Human-Computer Interaction": ["human", "computer", "interaction", "HCI"],
+    "Materials Science": ["materials", "science", "nanotechnology", "engineering"],
+    "Astrophysics": ["astrophysics", "astronomy", "cosmology", "space"]
+}
