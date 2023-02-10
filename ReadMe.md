@@ -10,7 +10,7 @@
     For keeping your sanity when searching for papers.
     <br/>
     <br/>
-    <a href="">View Demo (TODO)</a>
+    <p>View Demo (In the Future)</p>
     .
     <a href="https://github.com/mcpeixoto/PaperRecomenderSystem/issues">Report Bug</a>
     .
