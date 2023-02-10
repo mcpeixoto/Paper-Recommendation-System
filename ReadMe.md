@@ -62,7 +62,7 @@ make download
 ```
 
 
-1. Run the following command to create the Faiss index:
+3. Run the following command to create the Faiss index:
 
 ```sh
 make create_index
