@@ -14,6 +14,7 @@ import time
 from os.path import join
 import pickle
 from gensim.models import LdaModel, LdaMulticore
+import json
 
 from config import data_dir, thumbnail_dir, testing
 from utils import get_thumbnail, get_url
@@ -30,6 +31,9 @@ st.set_page_config(
         'About': "A simple paper recommendation engine using sentence embeddings, faiss, streamlit and gensim. ",
     }
 )
+
+if not hasattr(st.session_state, 'selected_categories'):
+    st.session_state.selected_categories = []
 
 
 # TODO: https://blog.streamlit.io/make-dynamic-filters-in-streamlit-and-show-their-effects-on-the-original-dataset/
@@ -72,6 +76,32 @@ def load_index():
 
     return index
 
+
+def load_user_tags():
+    print("Loading user tags!")
+    with open('tags.json', 'r') as f:
+            user_tags = json.load(f)
+        
+    return user_tags
+
+
+def get_user_tags_from_query(query, user_tag_keys ,model):
+    # This will embedd the query and then compare it to the user tags (key + values)
+
+    # Get the embeddings of the query
+    query_embedding = model.encode(query, convert_to_tensor=True).cpu()
+
+    # Get the embeddings of the user tags
+    to_encode = [f"{key} - {','.join(value)}" for key, value in load_user_tags().items() if key in user_tag_keys]
+    user_tags_embeddings = model.encode(to_encode, convert_to_tensor=True).cpu()
+
+    # Compute the dot product
+    dot_product = np.dot(query_embedding, user_tags_embeddings.T)
+
+    # Get the tags and probabilities
+    return [(tag, prob) for tag, prob in zip(user_tag_keys, dot_product)]
+
+
 def get_tags(query, lda_model, dictionary):
     query = query.split()
     query = [token for token in query if token.isalnum()]
@@ -87,11 +117,92 @@ model = load_model()
 data = load_data()
 index = load_index()
 lda_model, tags_dictionary = load_LDA()
+user_tags = load_user_tags()
+
+def draw_sidebar():
+    """Should include dynamically generated filters"""
+    
+    with st.sidebar:
+        # Filter by category of our data
+        categories = data['categories'].unique()
+
+        # Sidebar
+        st.sidebar.header("Filters")
+        st.sidebar.subheader("By Category")
+        
+        # multiselect
+        selected_categories = st.sidebar.multiselect("Select categories", categories)
+
+        # Add a button to clear the filters
+        if st.sidebar.button("Clear filters"):
+            selected_categories = []
+
+        # Add a button to apply the filters
+        if st.sidebar.button("Apply filters"):
+            st.session_state.selected_categories = selected_categories
+
+            # Reload the page
+            st.experimental_rerun()
 
 
+        # Show user tags
+        st.sidebar.header("User Tags")
+        
+        # Show the user tags
+        st.sidebar.subheader("Your tags:")
+        st.sidebar.write(", ".join(user_tags.keys()))
+
+        # Add a new user tag
+        st.sidebar.subheader("Add a new User Tag")
+        new_tag = st.sidebar.text_input("Tag name")
+        new_tag_values = st.sidebar.text_input("Tag values (comma separated)")
+
+        if st.sidebar.button("Add tag"):
+            user_tags[new_tag] = new_tag_values.split(',')
+            with open('tags.json', 'w') as f:
+                json.dump(user_tags, f)
+
+            # Reload the page
+            st.experimental_rerun()
+
+        # Remove a user tag
+        st.sidebar.subheader("Remove a User Tag")
+        remove_tag = st.sidebar.selectbox("Select tag to remove", list(user_tags.keys()))
+
+        if st.sidebar.button("Remove tag"):
+            user_tags.pop(remove_tag)
+            with open('tags.json', 'w') as f:
+                json.dump(user_tags, f)
+
+            # Reload the page
+            st.experimental_rerun()
+
+        # Remove all user tags
+        st.sidebar.subheader("Remove **ALL** User Tags (Dangerous)")
+        if st.sidebar.button("Remove all tags"):
+            user_tags.clear()
+            with open('tags.json', 'w') as f:
+                json.dump(user_tags, f)
+
+            # Reload the page
+            st.experimental_rerun()
+
+        # Notes:
+        st.sidebar.subheader("Notes")
+        st.sidebar.write("**You can directly edit the tags.json file to add or remove new tags**")
+
+
+
+        
+
+
+
+            
 def main():
     st.title("Paper Recommendation Engine")
     query = st.text_input("Search query")
+
+    draw_sidebar()
 
     # make the num result a input box
     k = st.number_input("Number of results", 1, 50, 10)
@@ -127,8 +238,19 @@ def main():
             thumbnail = get_thumbnail(url)
             authors = eval(row['authors_parsed'])
             authors = [x[1] + " " + x[0] for x in authors]
-            tag_list = get_tags(title, lda_model, tags_dictionary)
-            
+            lda_tag_list = get_tags(title, lda_model, tags_dictionary)
+
+            # If category not in st.session_state.selected_categories
+            print(st.session_state.selected_categories)
+            print(row['categories'])
+            categories = row['categories'].split()
+            if len(st.session_state.selected_categories) > 0:
+                c = True
+                for cat in categories:
+                    if cat in st.session_state.selected_categories:
+                        c = False
+                if c:
+                    continue
 
             if len(authors) > 3:
                 authors = ", ".join(authors[:3]) + " et al."
@@ -140,24 +262,49 @@ def main():
             # Author, date, categories
             # categories should be blue
 
-
-            # Add tags
             html = f"""
                 ### [**{round(row['score']*100)}**] - :red[[{title}]({url})]  
                 <font size="5"> *{authors}*  <br>
-                {row['update_date']} - :blue[{row['categories'].replace(' ', ', ')}] <br>
-                <font size="4"> Tags: """
+                {row['update_date']} - :blue[{row['categories'].replace(' ', ', ')}]"""
 
-            for tag, prob in tag_list:
-                html += f":blue[[{tag} ({round(prob*100)}%)]] "
+  
+            ##################
+            #### LDA Tags ####
+            ##################
 
+            # If any prob in lda_tag_list > 0.5
+            if any([prob > 0.5 for tag, prob in lda_tag_list]):
+                html += f"""<br> <font size="4"> LDA Auto Tags: """
+                for tag, prob in lda_tag_list:
+                    if prob > 0.5:
+                        html += f":blue[[{tag} ({round(prob*100)}%)]] "
+
+            ###################
+            #### User Tags ####
+            ###################
+
+            user_tag_list = get_user_tags_from_query(row['title'] + " " + row['abstract'], user_tags, model)
+            if any([prob > 0.5 for tag, prob in lda_tag_list]):
+                html += f"""<font size="4"> User Tags: """
+                for tag, prob in user_tag_list:
+                    if prob > 0.5:
+                        html += f":red[[{tag} ({round(prob*100)}%)]] "
+
+                
+            # Show html
             st.markdown(html, unsafe_allow_html=True)
 
-   
+            ###################
+            #### Thumbnail ####
+            ###################
 
             # Add thumbnail
             if thumbnail:
                 st.image(thumbnail, use_column_width=True)
+
+            ##################
+            #### Abstract ####
+            ##################
 
             # Add abstract with normal text
             st.markdown(f"""
@@ -167,10 +314,6 @@ def main():
 
 
             st.markdown("---")
-
-
-
-
 
 
        
