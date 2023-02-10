@@ -222,7 +222,7 @@ def main():
 
         df = df.T
 
-        #print(df.columns) # ['id', 'abstract', 'title', 'doi', 'categories', 'update_date', 'authors_parsed', 'score']
+        # df.columns - # ['id', 'abstract', 'title', 'doi', 'categories', 'update_date', 'authors_parsed', 'score']
 
         ##########################################
         # Show results
@@ -239,8 +239,6 @@ def main():
             lda_tag_list = get_tags(title, lda_model, tags_dictionary)
 
             # If category not in st.session_state.selected_categories
-            print(st.session_state.selected_categories)
-            print(row['categories'])
             categories = row['categories'].split()
             if len(st.session_state.selected_categories) > 0:
                 c = True
