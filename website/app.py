@@ -14,9 +14,16 @@ import time
 from os.path import join
 import pickle
 import json
+import multiprocessing
+from multiprocessing import Pool
+
 
 from config import data_dir, thumbnail_dir, testing
 from utils import get_thumbnail, get_url
+
+
+# Explicitly set the environment variable TOKENIZERS_PARALLELISM to false
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 # Make page width a little wider
 st.set_page_config(
@@ -204,12 +211,19 @@ def main():
         # Show results
         ##########################################
 
+        # Iterate over rows to multiprocess the get_thumbnail function
+        pool = Pool(len(df))
+        processes = []
+        for _, row in df.iterrows():
+            processes.append(pool.apply_async(get_thumbnail, (get_url(row['id']),)))
+        pool.close() # no more tasks
+
         
-        for i, row in df.iterrows():
+        i = 0
+        for _, row in df.iterrows():
 
             title = row['title'].replace("\n", " ").replace("\t", " ").replace("[", " ").replace("]", " ").replace('\'', " ")
             url = get_url(row['id'])
-            thumbnail = get_thumbnail(url)
             authors = eval(row['authors_parsed'])
             authors = [x[1] + " " + x[0] for x in authors]
 
@@ -253,14 +267,16 @@ def main():
                 # Remove last ,
                 html = html[:-2]
 
-
-                
             # Show html
             st.markdown(html, unsafe_allow_html=True)
 
             ###################
             #### Thumbnail ####
             ###################
+
+            print(i)
+            thumbnail = processes[i].get() # get the result from the process
+            i += 1
 
             # Add thumbnail
             if thumbnail:
