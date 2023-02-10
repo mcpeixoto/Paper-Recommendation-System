@@ -76,3 +76,6 @@ if __name__ == "__main__":
     print("[+] Processing data..")
     process_data()
     print("[+] Done!")
+
+    # Delete join(data_dir, final_file_name)
+    os.remove(join(data_dir, "arxiv.json"))
