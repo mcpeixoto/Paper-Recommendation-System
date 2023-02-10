@@ -1,7 +1,7 @@
 <br/>
 <p align="center">
   <a href="https://github.com/mcpeixoto/PaperRecomenderSystem">
-    <img src="https://images.emojiterra.com/twitter/512px/1f9d0.png" alt="Logo" width="80" height="80">
+    <img src="https://images.emojiterra.com/google/noto-emoji/v2.034/512px/1f50e.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Paper Recommendation System</h3>
@@ -18,7 +18,8 @@
   </p>
 </p>
 
-![Downloads](https://img.shields.io/github/downloads/mcpeixoto/PaperRecomenderSystem/total) ![Contributors](https://img.shields.io/github/contributors/mcpeixoto/PaperRecomenderSystem?color=dark-green) ![Forks](https://img.shields.io/github/forks/mcpeixoto/PaperRecomenderSystem?style=social) ![Stargazers](https://img.shields.io/github/stars/mcpeixoto/PaperRecomenderSystem?style=social) ![Issues](https://img.shields.io/github/issues/mcpeixoto/PaperRecomenderSystem) ![License](https://img.shields.io/github/license/mcpeixoto/PaperRecomenderSystem) 
+
+![Contributors](https://img.shields.io/github/contributors/mcpeixoto/PaperRecomenderSystem?color=dark-green) ![Issues](https://img.shields.io/github/issues/mcpeixoto/PaperRecomenderSystem) ![License](https://img.shields.io/github/license/mcpeixoto/PaperRecomenderSystem) ![Forks](https://img.shields.io/github/forks/mcpeixoto/PaperRecomenderSystem?style=social) ![Stargazers](https://img.shields.io/github/stars/mcpeixoto/PaperRecomenderSystem?style=social)
 
 ## Table Of Contents
 
