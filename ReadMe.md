@@ -8,10 +8,10 @@ Still under development.
 
 ### TODOs
 
-- [ ] Add Taggs to the papers
+- [X] Add Taggs to the papers
 - [ ] Provide a way to add the paper to Zotero
 - [ ] Add button to find similar papers
-- [ ] Show the categories
-- [ ] Show the authors
-- [ ] Provide a preview of the paper
+- [X] Show the categories
+- [X] Show the authors
+- [X] Provide a preview of the paper
 - [ ] Question Answering to papers
