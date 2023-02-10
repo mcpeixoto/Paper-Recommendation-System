@@ -38,7 +38,9 @@
 
 ## About The Project
 
-![Screen Shot](images/screenshot.png)
+<div align="center">
+  <img src="resources/website.gif" width="700" class="center"/>
+</div>
 
 ## Built With
 
@@ -73,10 +75,8 @@ This will use the `environment.yml` file and conda to create a new environment w
 make download
 ```
 
-Note: This should also download a previosly generated checkpoint for the FaissIndex so you don't have to run the hole thing from scratch. 
-TODO
 
-3. Run the following command to create the Faiss index:
+1. Run the following command to create the Faiss index:
 
 ```sh
 make create_index
@@ -111,6 +111,7 @@ make update
 - [X] Show the authors
 - [X] Provide a preview of the paper
 - [ ] Question Answering to papers
+- [ ] Add "make download_checkpoint"
 
 ## Contributing
 
