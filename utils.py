@@ -12,8 +12,13 @@ def get_url(arxiv_id):
     # Id should be in YYMM.NNNNN format but sometimes it's not
     # so we have to add a leading 0 if necessary
     arxiv_id = str(arxiv_id)
-    first_part = arxiv_id.split(".")[0]
-    second_part = arxiv_id.split(".")[1]
+    try:
+        first_part = arxiv_id.split(".")[0]
+        second_part = arxiv_id.split(".")[1]
+    except:
+        # Weird ids like quant-ph/0207118
+        return "https://arxiv.org/abs/" + arxiv_id
+
 
     if len(first_part) != 4:
         while len(first_part) < 4:
@@ -40,7 +45,7 @@ def get_thumbnail(arxiv_url):
 
     # Get the thumbnail url
     # NOTE: There is also an e-print url, which contains the latex source code. This could be used to do some cool stuff
-    thumbnail_url = "https://arxiv.org/pdf/" + arxiv_id
+    thumbnail_url = arxiv_url.replace('abs', 'pdf') 
 
     # Download pdf, concatenate the pages horizontally and convert to png
     try:
