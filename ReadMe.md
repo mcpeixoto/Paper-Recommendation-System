@@ -21,20 +21,6 @@
 
 ![Contributors](https://img.shields.io/github/contributors/mcpeixoto/PaperRecomenderSystem?color=dark-green) ![Issues](https://img.shields.io/github/issues/mcpeixoto/PaperRecomenderSystem) ![License](https://img.shields.io/github/license/mcpeixoto/PaperRecomenderSystem) ![Forks](https://img.shields.io/github/forks/mcpeixoto/PaperRecomenderSystem?style=social) ![Stargazers](https://img.shields.io/github/stars/mcpeixoto/PaperRecomenderSystem?style=social)
 
-## Table Of Contents
-
-- [Table Of Contents](#table-of-contents)
-- [About The Project](#about-the-project)
-- [Built With](#built-with)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Usage](#usage)
-- [Roadmap](#roadmap)
-- [Contributing](#contributing)
-  - [Creating A Pull Request](#creating-a-pull-request)
-- [License](#license)
-- [Authors](#authors)
 
 ## About The Project
 
