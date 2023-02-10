@@ -35,7 +35,7 @@ st.set_page_config(
     initial_sidebar_state="auto",
     menu_items={
         "Get Help": "https://github.com/mcpeixoto/PaperRecomenderSystem",
-        "About": "A simple paper recommendation engine using sentence embeddings, faiss, streamlit and gensim. ",
+        "About": "Web interface to search ArXiv papers using NLP Sentence-Transformers, Faiss and Streamlit ",
     },
 )
 
