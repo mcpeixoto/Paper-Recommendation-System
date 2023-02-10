@@ -8,21 +8,20 @@ from tqdm import tqdm
 
 
 use_gpu = True
-device = 'cuda' if use_gpu else 'cpu'
+device = "cuda" if use_gpu else "cpu"
 
 # Print loading
 print("Loading model...")
 
 
-
 # Load the model
-model = SentenceTransformer('all-mpnet-base-v2', device=device)
+model = SentenceTransformer("all-mpnet-base-v2", device=device)
 print("Model loaded!")
 
 # Load the data
 print("Loading data...")
-data = pd.read_csv('data/arxiv_processed.csv')
-data['text'] = data['title'] + " " + data['abstract']
+data = pd.read_csv("data/arxiv_processed.csv")
+data["text"] = data["title"] + " " + data["abstract"]
 print("Data loaded!")
 
 # Load the index
@@ -52,14 +51,14 @@ class FaissIdx:
             return
 
         for i in tqdm(range(self.ctr, len(document_text), self.batch_size), desc="Adding documents to index", unit="batch"):
-            self.index.add(self.model.encode(document_text[i:i+self.batch_size]))
+            self.index.add(self.model.encode(document_text[i : i + self.batch_size]))
 
             if i % save_every == 0:
-                self.save_index('index_copy.faiss')
+                self.save_index("index_copy.faiss")
 
-        #self.doc_map[self.ctr] = document_text # store the original document text
+        # self.doc_map[self.ctr] = document_text # store the original document text
 
-        #def search_doc(self, query, k=3):
+        # def search_doc(self, query, k=3):
         #    D, I = self.index.search(self.model.encode(query).reshape(1, -1), k)
         #    return [{self.doc_map[idx]: score} for idx, score in zip(I[0], D[0]) if idx in self.doc_map]
 
@@ -79,8 +78,7 @@ class FaissIdx:
 
         print("Index loaded! Position: ", self.ctr)
         print("Documents in index: ", self.index.ntotal)
-        print("Documents total: ", len(data['text'].values))
-
+        print("Documents total: ", len(data["text"].values))
 
     def save_index(self, index_path):
         if use_gpu:
@@ -94,9 +92,10 @@ class FaissIdx:
             res = faiss.StandardGpuResources()
             self.index = faiss.index_cpu_to_gpu(res, 0, self.index)
 
+
 print("Loading index...")
 index = FaissIdx(model)
-index.load_index('index_copy.faiss')
+index.load_index("index_copy.faiss")
 print("Index loaded!")
 
 
@@ -114,9 +113,7 @@ while True:
     print("Results:")
     for idx, score in zip(I[0], D[0]):
         print(f"Score: {score}")
-        print(data['title'].values[idx])
-        print(data['abstract'].values[idx])
-        print(data['url'].values[idx])
+        print(data["title"].values[idx])
+        print(data["abstract"].values[idx])
+        print(data["url"].values[idx])
         print("------------------")
-
-

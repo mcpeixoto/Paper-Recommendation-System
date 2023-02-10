@@ -8,25 +8,22 @@ from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 import gc
 
-st. set_page_config(layout="wide")
+st.set_page_config(layout="wide")
 
 
-
-
-#@st.cache(persist=True, max_entries=1)
+# @st.cache(persist=True, max_entries=1)
 @st.experimental_singleton
 def load_model():
     print("Loading model!")
-    model = SentenceTransformer('all-mpnet-base-v2', device='cuda')
+    model = SentenceTransformer("all-mpnet-base-v2", device="cuda")
     return model
 
 
-#@st.cache(persist=True, max_entries=1)
+# @st.cache(persist=True, max_entries=1)
 @st.experimental_singleton
 def load_index():
     print("Loading index!")
-    index = faiss.read_index('index.faiss')
-
+    index = faiss.read_index("index.faiss")
 
     return index
 
@@ -44,34 +41,31 @@ def main():
     if len(query.split()) > 514:
         st.warning("Query too long, please use less than 514 words.")
 
-
     if query:
         D, I = index.search(model.encode(query).reshape(1, -1), k)
 
         df = pd.DataFrame()
         for idx, score in zip(I[0], D[0]):
             # Load the specific line from pandas
-            to_add = pd.read_csv('data/arxiv_processed.csv', nrows=1, skiprows=idx)#.iloc[0]
-            to_add.columns = ['abstract', 'title', 'url']
-
+            to_add = pd.read_csv("data/arxiv_processed.csv", nrows=1, skiprows=idx)  # .iloc[0]
+            to_add.columns = ["abstract", "title", "url"]
 
             # Add score
-            to_add['score'] = score
+            to_add["score"] = score
 
             df = pd.concat([df, to_add], axis=0)
 
         df = df
-
 
         # Checkbox
         dataframe_rep = st.checkbox("Use dataframe representation", value=False)
         baloons = st.checkbox("Use baloons", value=True)
 
         if dataframe_rep:
-            st.dataframe(df[['score', 'title', 'abstract', 'url']], use_container_width=True)
+            st.dataframe(df[["score", "title", "abstract", "url"]], use_container_width=True)
         else:
-            # Make a table 
-            st.table(df[['score', 'title', 'abstract', 'url']])
+            # Make a table
+            st.table(df[["score", "title", "abstract", "url"]])
 
         # Baloons
         if baloons:
@@ -80,7 +74,6 @@ def main():
         del df
         gc.collect()
 
-        
 
 if __name__ == "__main__":
     main()

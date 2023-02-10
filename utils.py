@@ -1,4 +1,3 @@
-
 from config import thumbnail_dir
 import urllib
 from pdf2image import convert_from_path
@@ -19,15 +18,14 @@ def get_url(arxiv_id):
         # Weird ids like quant-ph/0207118
         return "https://arxiv.org/abs/" + arxiv_id
 
-
     if len(first_part) != 4:
         while len(first_part) < 4:
             first_part = "0" + first_part
-    
+
     if len(second_part) != 5:
         while len(second_part) < 5:
             second_part = "0" + second_part
-    
+
     return "https://arxiv.org/abs/" + first_part + "." + second_part
 
 
@@ -45,12 +43,12 @@ def get_thumbnail(arxiv_url):
 
     # Get the thumbnail url
     # NOTE: There is also an e-print url, which contains the latex source code. This could be used to do some cool stuff
-    thumbnail_url = arxiv_url.replace('abs', 'pdf') 
+    thumbnail_url = arxiv_url.replace("abs", "pdf")
 
     # Download pdf, concatenate the pages horizontally and convert to png
     try:
         urllib.request.urlretrieve(thumbnail_url, join(thumbnail_dir, arxiv_id + ".pdf"))
-        
+
         # Read pdf
         images = convert_from_path(pdf_path)
     except Exception as e:
@@ -66,7 +64,7 @@ def get_thumbnail(arxiv_url):
 
     # Concatenate the pages horizontally
     width, height = images[0].size
-    new_im = Image.new('RGB', (width * len(images), height))
+    new_im = Image.new("RGB", (width * len(images), height))
     for i, im in enumerate(images):
         new_im.paste(im, (i * width, 0))
 
