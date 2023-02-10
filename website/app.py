@@ -55,17 +55,6 @@ def load_model():
     return model
 
 @st.experimental_singleton
-def load_LDA():
-    print("Loading LDA model!")
-    lda_model = LdaMulticore.load(join(data_dir, 'lda_model'))
-
-    # load the dictionary
-    with open(join(data_dir, 'tags_dictionary.pkl'), 'rb') as f:
-        tags_dictionary = pickle.load(f)
-    return lda_model, tags_dictionary
-
-
-@st.experimental_singleton
 def load_index():
     print("Loading index!")
 
@@ -102,21 +91,9 @@ def get_user_tags_from_query(query, user_tag_keys ,model):
     return [(tag, prob) for tag, prob in zip(user_tag_keys, dot_product)]
 
 
-def get_tags(query, lda_model, dictionary):
-    query = query.split()
-    query = [token for token in query if token.isalnum()]
-    bows =  dictionary.doc2bow(query)
-    topics = lda_model.get_document_topics(bows)
-    # Sort topics
-    topics = sorted(topics, key=lambda x: x[1], reverse=True)
-    topic_lists = [(dictionary.get(id), prob) for id, prob in topics]
-    return topic_lists # (topic, prob)
-
-
 model = load_model()
 data = load_data()
 index = load_index()
-lda_model, tags_dictionary = load_LDA()
 user_tags = load_user_tags()
 
 def draw_sidebar():
@@ -236,7 +213,6 @@ def main():
             thumbnail = get_thumbnail(url)
             authors = eval(row['authors_parsed'])
             authors = [x[1] + " " + x[0] for x in authors]
-            lda_tag_list = get_tags(title, lda_model, tags_dictionary)
 
             # If category not in st.session_state.selected_categories
             categories = row['categories'].split()
@@ -264,18 +240,6 @@ def main():
                 {row['update_date']} - :blue[{row['categories'].replace(' ', ', ')}]"""
 
   
-            ##################
-            #### LDA Tags ####
-            ##################
-
-            # If any prob in lda_tag_list > 0.5
-            if any([prob > 0.5 for tag, prob in lda_tag_list]):
-                html += f"""<br> <font size="4"> LDA Auto Tags: """
-                for tag, prob in lda_tag_list:
-                    if prob > 0.5:
-                        html += f":blue[[{tag}] ({round(prob*100)}%)], "
-                # Remove last ,
-                html = html[:-2]
 
             ###################
             #### User Tags ####
