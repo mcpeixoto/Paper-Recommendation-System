@@ -34,7 +34,7 @@ class FaissIdx:
         res = faiss.StandardGpuResources()
         self.index = faiss.index_cpu_to_gpu(res, 0, self.index)
 
-    # TODO: Check if current index was already added
+
     def add_doc(self, data):
         batch_size = 64
         save_every = 10
@@ -89,7 +89,6 @@ class FaissIdx:
         if self.use_gpu:
             self.switch_to_gpu()
 
-    # TODO: Make this keyboard interrupt safe
     def save_index(self, index_path):
         self.switch_to_cpu()
 

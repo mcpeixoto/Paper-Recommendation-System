@@ -42,10 +42,6 @@ st.set_page_config(
 if not hasattr(st.session_state, "selected_categories"):
     st.session_state.selected_categories = []
 
-
-# TODO: https://blog.streamlit.io/make-dynamic-filters-in-streamlit-and-show-their-effects-on-the-original-dataset/
-
-
 @st.experimental_singleton
 def load_data():
     print("Loading data!")
