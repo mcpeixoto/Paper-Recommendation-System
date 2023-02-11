@@ -6,7 +6,7 @@
 
   <h3 align="center">Paper Recommendation System</h3>
 
-  <p align="center">
+  <div align="center">
     For keeping your sanity when searching for papers.
     <br/>
     <br/>
@@ -16,10 +16,17 @@
     .
     <a href="https://github.com/mcpeixoto/PaperRecomenderSystem/issues">Request Feature</a>
   </p>
-</p>
+</div>
 
 
-![Contributors](https://img.shields.io/github/contributors/mcpeixoto/PaperRecomenderSystem?color=dark-green) ![Issues](https://img.shields.io/github/issues/mcpeixoto/PaperRecomenderSystem) ![License](https://img.shields.io/github/license/mcpeixoto/PaperRecomenderSystem) ![Forks](https://img.shields.io/github/forks/mcpeixoto/PaperRecomenderSystem?style=social) ![Stargazers](https://img.shields.io/github/stars/mcpeixoto/PaperRecomenderSystem?style=social)
+<div align="center">
+  <img src="https://img.shields.io/github/contributors/mcpeixoto/PaperRecomenderSystem?color=dark-green" alt="Contributors"/>
+  <img src="https://img.shields.io/github/issues/mcpeixoto/PaperRecomenderSystem" alt="Issues"/>
+  <img src="https://img.shields.io/github/license/mcpeixoto/PaperRecomenderSystem" alt="License"/>
+  <img src="https://img.shields.io/github/forks/mcpeixoto/PaperRecomenderSystem?style=social" alt="Forks"/>
+  <img src="https://img.shields.io/github/stars/mcpeixoto/PaperRecomenderSystem?style=social" alt="Stargazers"/>
+</div>
+
 
 
 ## About The Project
