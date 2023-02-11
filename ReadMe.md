@@ -65,14 +65,21 @@ This will use the `environment.yml` file and conda to create a new environment w
 make download
 ```
 
+3. (Optional) Download the Faiss index & Data checkpoint
+  
+```sh
+make download_checkpoint
+```
 
-3. Run the following command to create the Faiss index:
+4. Run the following command to create the Faiss index:
+
+Note: This step is required if you didn't download the checkpoint, optional otherwise.
 
 ```sh
 make create_index
 ```
 
-4. Run the following command to start the Streamlit app:
+1. Run the following command to start the Streamlit app:
 
 ```sh
 make run

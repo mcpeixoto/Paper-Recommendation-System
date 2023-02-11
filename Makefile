@@ -12,6 +12,7 @@ help:
 	@echo "    help                 💬 This help message"
 	@echo "    install              📦 Create conda enviroment e install dependencies."
 	@echo "    download             📥 Download data from the web."
+	@echo "    download_checkpoint  📥 Download the checkpoint for the data & index."
 	@echo "    create_index      	🏋️‍♀️ Creates the FAISS index by embedding all the papers."
 	@echo "    update 		   		🔄 Update the app with the latest papers."
 	@echo "    run              	🏃 Run the aplication."
@@ -35,6 +36,13 @@ download:
 	$(CONDA_ACTIVATE) $(CURRENT_DIR)/.env
 	@# Download data
 	python data_handling/download.py
+
+download_checkpoint:
+	@echo "Downloading checkpoint..."
+	@# Activate conda enviroment
+	$(CONDA_ACTIVATE) $(CURRENT_DIR)/.env
+	@# Download checkpoint
+	python data_handling/download_checkpoint.py
 
 create_index:
 	@echo "Creating FAISS index..."
