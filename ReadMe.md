@@ -59,24 +59,20 @@ make install
 
 This will use the `environment.yml` file and conda to create a new environment with all the required dependencies.
 
-2. Download the ArXiv dataset from [Kaggle](https://www.kaggle.com/Cornell-University/arxiv), this can be done by running the following command:
-
-```sh
-make download
-```
-
-3. (Optional) Download the Faiss index & Data checkpoint
+2. (Optional) Download the Faiss index & Data checkpoint
   
 ```sh
 make download_checkpoint
 ```
 
-4. Run the following command to create the Faiss index:
+3. Update the Index and Dataset
+  
+(Optional if you did step 2)
 
-Note: This step is required if you didn't download the checkpoint, optional otherwise.
+This will download the ArXiv dataset from [Kaggle](https://www.kaggle.com/Cornell-University/arxiv) and create/update the Faiss index.
 
 ```sh
-make create_index
+make update
 ```
 
 1. Run the following command to start the Streamlit app:
@@ -108,7 +104,8 @@ make update
 - [X] Show the authors
 - [X] Provide a preview of the paper
 - [ ] Question Answering to papers
-- [ ] Add "make download_checkpoint"
+- [X] Add "make download_checkpoint"
+- [ ] Filter papers by time
 
 ## Contributing
 

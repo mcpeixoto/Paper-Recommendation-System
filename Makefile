@@ -60,10 +60,9 @@ update:
 	@echo "Deleting old files..."
 	rm -f data/arxiv.json
 	rm -f data/arxiv_processed.csv
-	@echo "Downloading data..."
-	python data_handling/download.py
-	@echo "Creating FAISS index..."
-	python data_handling/create_index.py
+	
+	make download
+	make create_index
 	@echo "Done!"
 
 run:
